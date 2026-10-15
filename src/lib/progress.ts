@@ -1,4 +1,5 @@
 import type { ProgressPayload } from "@/db/schema";
+import { defaultProfile } from "@/lib/profile";
 
 export const STORAGE_KEY = "ferroplan-progress-v1";
 export const USER_ID_KEY = "ferroplan-user-id";
@@ -10,6 +11,7 @@ export const defaultPayload = (): ProgressPayload => ({
   cravingChecks: [],
   notes: "",
   ferritinReminder: "",
+  profile: defaultProfile(),
 });
 
 export function createUserId() {

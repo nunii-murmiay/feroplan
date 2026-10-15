@@ -7,6 +7,7 @@ import {
   homeWorkouts,
   weekSchedule,
 } from "@/data/workouts";
+import { useProfile } from "@/components/profile-provider";
 
 const tabs = [
   { value: "week", label: "Неделя" },
@@ -19,6 +20,7 @@ type TabValue = (typeof tabs)[number]["value"];
 
 export function TrainingSection() {
   const [tab, setTab] = useState<TabValue>("week");
+  const { plan, ready, profile } = useProfile();
 
   return (
     <section id="training" className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
@@ -33,6 +35,12 @@ export function TrainingSection() {
           3–4 домашних тренировки + 1 зал. Разные стили, чтобы не скучать.
           В ПМС и менструацию смело снижай интенсивность — это умнее, не слабее.
         </p>
+        {ready ? (
+          <p className="mt-4 rounded-xl bg-sand/70 px-4 py-3 text-sm leading-relaxed text-pine">
+            Под тебя сейчас: {plan.trainingNote}
+            {profile.isSick ? " (режим болезни включён)" : ""}
+          </p>
+        ) : null}
       </header>
 
       <div className="mt-10">

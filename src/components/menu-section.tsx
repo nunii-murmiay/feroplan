@@ -3,9 +3,13 @@
 import { useState } from "react";
 import { portionGuide, weeklyMenu } from "@/data/nutrition";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useProfile } from "@/components/profile-provider";
+import { scaleGramRange } from "@/lib/profile";
 
 export function MenuSection() {
   const [day, setDay] = useState(weeklyMenu[0].short);
+  const { plan, ready } = useProfile();
+  const scale = ready ? plan.portionScale : 1;
 
   return (
     <section
@@ -18,22 +22,23 @@ export function MenuSection() {
             02 · Меню-ротация
           </p>
           <h2 className="mt-3 font-display text-3xl text-pine sm:text-4xl">
-            Неделя с примерной граммовкой
+            Неделя с граммовкой под тебя
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
-            На каждый приём — 2 варианта с граммами. Крупы указаны в сухом виде
-            (удобно взвесить до варки). Диапазон ≈ ±10–15 г — подстрой под голод
-            и учёбу, не гонись за идеальной точностью каждый день.
+            Граммы уже умножены на твой масштаб порций{" "}
+            <strong className="text-pine">×{scale}</strong> (цель{" "}
+            {ready ? plan.targetKcal : "…"} ккал). Крупы — в сухом виде. Если
+            голодно на учёбе — можно +10–15 г крупы, не ломая план.
           </p>
         </header>
 
         <div className="mt-8 overflow-hidden rounded-2xl border border-pine/10 bg-card/70">
           <div className="border-b border-pine/10 bg-sand/50 px-4 py-3 sm:px-5">
             <h3 className="font-display text-lg text-pine">
-              Шпаргалка порций
+              Базовая шпаргалка (до масштаба)
             </h3>
             <p className="text-sm text-muted-foreground">
-              Быстрые ориентиры, если весов нет под рукой
+              Ориентиры «на глаз»; в меню ниже уже твои граммы
             </p>
           </div>
           <ul className="divide-y divide-border/60">
@@ -43,7 +48,9 @@ export function MenuSection() {
                 className="grid gap-1 px-4 py-3 text-sm sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] sm:gap-4 sm:px-5"
               >
                 <span className="font-medium text-ink">{row.item}</span>
-                <span className="text-muted-foreground">{row.amount}</span>
+                <span className="text-muted-foreground">
+                  {scaleGramRange(row.amount, scale)}
+                </span>
               </li>
             ))}
           </ul>
@@ -92,7 +99,7 @@ export function MenuSection() {
                             {option.grams.map((line) => (
                               <li key={line} className="flex gap-2">
                                 <span className="text-moss">·</span>
-                                <span>{line}</span>
+                                <span>{scaleGramRange(line, scale)}</span>
                               </li>
                             ))}
                           </ul>
@@ -110,12 +117,6 @@ export function MenuSection() {
             </TabsContent>
           ))}
         </Tabs>
-
-        <p className="mt-10 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          Лайфхак на воскресенье: отмерь сразу 3 порции крупы по 65 г сухой,
-          запеки 500–600 г бёдер, отвари 6 яиц. В будни только собираешь тарелку
-          по граммам из списка — меньше импульсивных перекусов от голода.
-        </p>
       </div>
     </section>
   );

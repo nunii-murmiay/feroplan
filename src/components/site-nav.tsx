@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 
 const links = [
+  { href: "#profile", label: "Профиль" },
   { href: "#principles", label: "Питание" },
   { href: "#menu", label: "Меню" },
   { href: "#training", label: "Тренировки" },
   { href: "#cravings", label: "Сладкое и ПМС" },
-  { href: "#progress", label: "Мой прогресс" },
+  { href: "#progress", label: "Прогресс" },
 ] as const;
 
 export function SiteNav() {

@@ -18,22 +18,16 @@ export function Hero() {
           </p>
           <div className="animate-fade-up-delay-2 mt-8 flex flex-wrap gap-3">
             <a
-              href="#principles"
+              href="#profile"
               className="inline-flex items-center justify-center rounded-md bg-pine px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:bg-moss"
             >
-              Начать с принципов
+              Мой профиль
             </a>
             <a
               href="#menu"
               className="inline-flex items-center justify-center rounded-md border border-pine/20 bg-sand/60 px-5 py-2.5 text-sm font-medium text-pine transition hover:bg-sand"
             >
-              Открыть меню
-            </a>
-            <a
-              href="#progress"
-              className="inline-flex items-center justify-center rounded-md border border-pine/20 bg-transparent px-5 py-2.5 text-sm font-medium text-pine transition hover:bg-sand/50"
-            >
-              Мой прогресс
+              Меню с граммами
             </a>
           </div>
         </div>

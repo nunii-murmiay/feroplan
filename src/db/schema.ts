@@ -1,4 +1,5 @@
 import { jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import type { UserProfile } from "@/lib/profile";
 
 /** One row per browser/user key — personal progress blob */
 export const progress = pgTable("progress", {
@@ -22,4 +23,5 @@ export type ProgressPayload = {
   cravingChecks: string[];
   notes: string;
   ferritinReminder: string;
+  profile: UserProfile;
 };

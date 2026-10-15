@@ -15,7 +15,7 @@ export async function GET(request: Request) {
       mode: "local" as const,
       payload: null,
       message:
-        "DATABASE_URL не задан — прогресс хранится в браузере. Подключи бесплатный Neon для облака.",
+        "Серверная БД не задана — используй Supabase (NEXT_PUBLIC_SUPABASE_*) или локальное сохранение.",
     });
   }
 
@@ -76,6 +76,10 @@ export async function PUT(request: Request) {
       ? body.payload.cravingChecks.map(String).slice(0, 20)
       : [],
     mealChoices: body.payload.mealChoices ?? {},
+    profile: {
+      ...defaultPayload().profile,
+      ...body.payload.profile,
+    },
   };
 
   if (!hasDatabase()) {

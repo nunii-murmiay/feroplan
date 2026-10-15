@@ -1,5 +1,7 @@
 import { SiteNav } from "@/components/site-nav";
 import { Hero } from "@/components/hero";
+import { ProfileProvider } from "@/components/profile-provider";
+import { ProfileSection } from "@/components/profile-section";
 import { PrinciplesSection } from "@/components/principles-section";
 import { MenuSection } from "@/components/menu-section";
 import { TrainingSection } from "@/components/training-section";
@@ -8,10 +10,11 @@ import { ProgressSection } from "@/components/progress-section";
 
 export default function Home() {
   return (
-    <>
+    <ProfileProvider>
       <SiteNav />
       <main className="flex-1">
         <Hero />
+        <ProfileSection />
         <PrinciplesSection />
         <MenuSection />
         <TrainingSection />
@@ -22,10 +25,10 @@ export default function Home() {
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p className="font-display text-lg text-pine">Ферроплан</p>
           <p>
-            Мягкий план на 4 недели · питание · движение · цикл · без осуждения
+            Персональный план · железо · цикл · сон · Netlify + Supabase
           </p>
         </div>
       </footer>
-    </>
+    </ProfileProvider>
   );
 }
