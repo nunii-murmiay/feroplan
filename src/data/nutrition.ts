@@ -1085,7 +1085,9 @@ export const adaptedDayMenus: Record<
 
 const weekdayShortRu = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"] as const;
 
-export function getWeekdayMenu(date = new Date()): DayMenu {
+/** Pass an explicit Date from the client after mount — never call new Date() during prerender. */
+export function getWeekdayMenu(date?: Date | null): DayMenu {
+  if (!date) return weeklyMenu[0];
   const short = weekdayShortRu[date.getDay()];
   return weeklyMenu.find((d) => d.short === short) ?? weeklyMenu[0];
 }
@@ -1094,7 +1096,7 @@ type TodayMenuInput = {
   cyclePhase: string;
   sleepHours: number;
   isSick: boolean;
-  date?: Date;
+  date?: Date | null;
 };
 
 export function resolveTodayMenu(input: TodayMenuInput): TodayMenuPlan {

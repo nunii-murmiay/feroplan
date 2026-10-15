@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   resolveTodayMenu,
   weeklyMenu,
@@ -59,13 +59,24 @@ export function MenuSection() {
   const { plan, ready, profile } = useProfile();
   const scale = ready ? plan.portionScale : 1;
 
+  // Avoid new Date() during prerender (Netlify / next build).
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+  }, []);
+
   const today = resolveTodayMenu({
     cyclePhase: profile.cyclePhase,
     sleepHours: profile.sleepHours,
     isSick: profile.isSick,
+    date: now,
   });
 
-  const [day, setDay] = useState(today.weekday.short);
+  const [day, setDay] = useState(weeklyMenu[0].short);
+
+  useEffect(() => {
+    setDay(today.weekday.short);
+  }, [today.weekday.short]);
 
   return (
     <section
