@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   resolveTodayMenu,
+  weekdayShortFromDate,
   weeklyMenu,
   portionGuide,
   type MealSlot,
@@ -59,24 +60,24 @@ export function MenuSection() {
   const { plan, ready, profile } = useProfile();
   const scale = ready ? plan.portionScale : 1;
 
-  // Avoid new Date() during prerender (Netlify / next build).
-  const [now, setNow] = useState<Date | null>(null);
+  // Weekday only after mount — no Date during SSR/prerender.
+  const [weekdayShort, setWeekdayShort] = useState<string | null>(null);
   useEffect(() => {
-    setNow(new Date());
+    setWeekdayShort(weekdayShortFromDate(new Date()));
   }, []);
 
   const today = resolveTodayMenu({
     cyclePhase: profile.cyclePhase,
     sleepHours: profile.sleepHours,
     isSick: profile.isSick,
-    date: now,
+    weekdayShort,
   });
 
   const [day, setDay] = useState(weeklyMenu[0].short);
 
   useEffect(() => {
-    setDay(today.weekday.short);
-  }, [today.weekday.short]);
+    if (weekdayShort) setDay(weekdayShort);
+  }, [weekdayShort]);
 
   return (
     <section

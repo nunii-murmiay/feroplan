@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  /* Keep prerender tolerant on Netlify: Cache Components forbids new Date() at build. */
+  cacheComponents: false,
   turbopack: {
     rules: {
       "*.css": {
