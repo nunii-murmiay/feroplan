@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ferro-plan
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start -- --port $PORT --hostname 0.0.0.0
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        sync: false
