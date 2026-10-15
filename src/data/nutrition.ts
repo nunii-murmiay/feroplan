@@ -754,6 +754,430 @@ export const weeklyMenu: DayMenu[] = [
   },
 ];
 
+export type TodayMenuMode =
+  | "sick"
+  | "lowSleep"
+  | "menstruation"
+  | "luteal"
+  | "default";
+
+export type TodayMenuPlan = {
+  mode: TodayMenuMode;
+  title: string;
+  reason: string;
+  focus: string;
+  tips: string[];
+  meals: MealSlot[];
+  weekday: DayMenu;
+};
+
+/** Soft day menus when cycle / sleep / illness override the weekly rotation. */
+export const adaptedDayMenus: Record<
+  Exclude<TodayMenuMode, "default">,
+  { title: string; focus: string; tips: string[]; meals: MealSlot[] }
+> = {
+  sick: {
+    title: "Мягкий день восстановления",
+    focus: "Тёплая еда, жидкость, без дефицита",
+    tips: [
+      "Не считай странный аппетит срывом — цель сегодня выздоровление.",
+      "Пей чаще: вода, компот, тёплый чай через час после еды с железом.",
+      "Тренировки отменяем; максимум дыхание или растяжка в кровати.",
+    ],
+    meals: [
+      {
+        name: "Завтрак",
+        options: [
+          {
+            title: "Жидкая овсянка",
+            grams: [
+              "овсянка 50–55 г сухой",
+              "вода или молоко 250–300 мл",
+              "банан 80–100 г",
+              "мёд 8–10 г — по желанию",
+            ],
+          },
+          {
+            title: "Яйца всмятку + тост",
+            grams: [
+              "яйца 2 шт",
+              "хлеб 30–35 г",
+              "масло 5 г",
+            ],
+          },
+        ],
+      },
+      {
+        name: "Обед",
+        options: [
+          {
+            title: "Куриный или овощной суп",
+            grams: [
+              "суп 350–450 мл",
+              "курица 80–100 г или чечевица в супе",
+              "хлеб 30–35 г",
+            ],
+          },
+          {
+            title: "Рис + яйцо + овощи",
+            grams: [
+              "рис 50–55 г сухой",
+              "яйцо 1–2 шт",
+              "овощи тушёные 150–200 г",
+            ],
+          },
+        ],
+        tip: "Тёплое и простое важнее «идеального железа»",
+      },
+      {
+        name: "Перекус",
+        options: [
+          {
+            title: "Йогурт или банан",
+            grams: ["йогурт 125 г или банан 100–120 г"],
+          },
+        ],
+      },
+      {
+        name: "Ужин",
+        options: [
+          {
+            title: "Каша + белок",
+            grams: [
+              "гречка или рис 50–55 г сухой",
+              "яйца 1–2 шт или курица 100–120 г",
+              "овощи 100–150 г",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  lowSleep: {
+    title: "День после недосыпа",
+    focus: "Белок + углеводы раньше сладкого, без жёсткого дефицита",
+    tips: [
+      "Недосып усиливает тягу — сначала нормальная еда, потом осознанный десерт.",
+      "Кофе — после завтрака с белком, не натощак.",
+      "Ложись раньше, если можешь: сон сегодня важнее идеальных граммов.",
+    ],
+    meals: [
+      {
+        name: "Завтрак",
+        options: [
+          {
+            title: "Овсянка + яйцо + какао",
+            grams: [
+              "овсянка 55–60 г сухой",
+              "яйцо 1–2 шт",
+              "банан 100–120 г",
+              "какао 5–8 г",
+            ],
+          },
+        ],
+        tip: "Плотный завтрак снижает вечерний срыв",
+      },
+      {
+        name: "Обед",
+        options: [
+          {
+            title: "Гречка + курица + овощи",
+            grams: [
+              "гречка 60–65 г сухой",
+              "курица 150–160 г",
+              "овощи 180–220 г",
+              "масло 5–8 г",
+            ],
+          },
+          {
+            title: "Паста + фарш + салат",
+            grams: [
+              "макароны 70–75 г сухих",
+              "фарш 120–140 г",
+              "салат 150 г",
+            ],
+          },
+        ],
+      },
+      {
+        name: "Перекус",
+        options: [
+          {
+            title: "Творог + ягоды или шоколад после еды",
+            grams: [
+              "творог 120–150 г + ягоды 80 г",
+              "или шоколад 70% 15–20 г после обеда",
+            ],
+          },
+        ],
+      },
+      {
+        name: "Ужин",
+        options: [
+          {
+            title: "Рыба/яйца + картофель или крупа",
+            grams: [
+              "рыба 150 г или яйца 2 шт",
+              "картофель 200–220 г или крупа 55 г сухой",
+              "овощи 150 г",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  menstruation: {
+    title: "День менструации",
+    focus: "Железо + витамин C, тёплые супы и каши",
+    tips: [
+      "Не режь калории — это усиливает слабость и тягу.",
+      "Чай/кофе и молочку — через 1–1,5 ч после железного приёма.",
+      "Силовые и зал можно перенести; прогулка или йога — ок.",
+    ],
+    meals: [
+      {
+        name: "Завтрак",
+        options: [
+          {
+            title: "Гречневая каша + яйцо",
+            grams: [
+              "гречка 55–60 г сухой",
+              "яйцо 1–2 шт",
+              "тыквенные семечки 15–20 г",
+            ],
+          },
+          {
+            title: "Овсянка с какао",
+            grams: [
+              "овсянка 55–60 г сухой",
+              "банан 100 г",
+              "какао 5–8 г",
+              "семечки 20 г",
+            ],
+          },
+        ],
+      },
+      {
+        name: "Обед",
+        options: [
+          {
+            title: "Печень или говядина + гречка + перец/лимон",
+            grams: [
+              "печень 70–80 г или говядина 120–140 г",
+              "гречка 60–65 г сухой",
+              "болгарский перец 80–100 г или лимон ½",
+              "капуста/овощи 120–150 г",
+            ],
+          },
+          {
+            title: "Чечевичный суп + хлеб + киви/апельсин",
+            grams: [
+              "суп 350–400 мл (чечевица 60 г сухой на порцию)",
+              "хлеб 35–40 г",
+              "киви или апельсин 1 шт",
+            ],
+          },
+        ],
+        tip: "Главный «железный» приём дня — без молока в тарелке",
+      },
+      {
+        name: "Перекус",
+        options: [
+          {
+            title: "Яблоко + семечки или тёплый какао",
+            grams: [
+              "яблоко 150 г + семечки 20 г",
+              "или какао 5–8 г на 200 мл воды",
+            ],
+          },
+        ],
+      },
+      {
+        name: "Ужин",
+        options: [
+          {
+            title: "Суп или каша + курица/яйца",
+            grams: [
+              "суп 300–350 мл или крупа 55 г сухой",
+              "курица 140–160 г или яйца 2 шт",
+              "овощи 150 г",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  luteal: {
+    title: "День ПМС / лютеиновой фазы",
+    focus: "Сложные углеводы, магний, заранее заложенный десерт",
+    tips: [
+      "Сначала тарелка с углеводом и белком — потом шоколад 15–25 г.",
+      "Магний: семечки, какао, гречка, банан.",
+      "HIIT можно пропустить; танцы, йога, лёгкая сила — по самочувствию.",
+    ],
+    meals: [
+      {
+        name: "Завтрак",
+        options: [
+          {
+            title: "Овсянка + банан + какао + семечки",
+            grams: [
+              "овсянка 60–65 г сухой",
+              "банан 100–120 г",
+              "какао 5–8 г",
+              "тыквенные семечки 20–25 г",
+            ],
+          },
+        ],
+      },
+      {
+        name: "Обед",
+        options: [
+          {
+            title: "Гречка/паста + белок + овощи",
+            grams: [
+              "гречка 65–70 г сухой или паста 75–80 г сухих",
+              "курица 150–170 г или фарш 130–150 г",
+              "овощи 180–220 г",
+              "масло 8 г",
+            ],
+          },
+          {
+            title: "Картофель + яйца/рыба",
+            grams: [
+              "картофель 200–220 г",
+              "яйца 2 шт или рыба 150 г",
+              "салат 150 г",
+            ],
+          },
+        ],
+        tip: "Чуть больше углеводов — это адаптация, не «срыв»",
+      },
+      {
+        name: "Перекус",
+        options: [
+          {
+            title: "Запланированный десерт после еды",
+            grams: [
+              "шоколад 70% 15–25 г",
+              "или йогурт 125 г + ягоды 80 г",
+            ],
+          },
+        ],
+      },
+      {
+        name: "Ужин",
+        options: [
+          {
+            title: "Тёплый ужин с белком",
+            grams: [
+              "крупа 55–60 г сухой или паста 160–180 г готовой",
+              "творог 150–180 г или курица 140 г",
+              "овощи 150 г",
+              "семечки 15 г — по желанию",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+};
+
+const weekdayShortRu = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"] as const;
+
+export function getWeekdayMenu(date = new Date()): DayMenu {
+  const short = weekdayShortRu[date.getDay()];
+  return weeklyMenu.find((d) => d.short === short) ?? weeklyMenu[0];
+}
+
+type TodayMenuInput = {
+  cyclePhase: string;
+  sleepHours: number;
+  isSick: boolean;
+  date?: Date;
+};
+
+export function resolveTodayMenu(input: TodayMenuInput): TodayMenuPlan {
+  const weekday = getWeekdayMenu(input.date);
+  const reasonParts: string[] = [];
+
+  if (input.isSick) {
+    const adapted = adaptedDayMenus.sick;
+    reasonParts.push("режим болезни");
+    return {
+      mode: "sick",
+      title: adapted.title,
+      reason: `Сегодня: ${weekday.day.toLowerCase()} · ${reasonParts.join(", ")}`,
+      focus: adapted.focus,
+      tips: adapted.tips,
+      meals: adapted.meals,
+      weekday,
+    };
+  }
+
+  if (input.sleepHours < 6) {
+    const adapted = adaptedDayMenus.lowSleep;
+    reasonParts.push(`мало сна (${input.sleepHours} ч)`);
+    if (input.cyclePhase === "menstruation") reasonParts.push("менструация");
+    else if (input.cyclePhase === "luteal") reasonParts.push("ПМС");
+    return {
+      mode: "lowSleep",
+      title: adapted.title,
+      reason: `Сегодня: ${weekday.day.toLowerCase()} · ${reasonParts.join(", ")}`,
+      focus: adapted.focus,
+      tips: adapted.tips,
+      meals: adapted.meals,
+      weekday,
+    };
+  }
+
+  if (input.cyclePhase === "menstruation") {
+    const adapted = adaptedDayMenus.menstruation;
+    return {
+      mode: "menstruation",
+      title: adapted.title,
+      reason: `Сегодня: ${weekday.day.toLowerCase()} · менструация`,
+      focus: adapted.focus,
+      tips: adapted.tips,
+      meals: adapted.meals,
+      weekday,
+    };
+  }
+
+  if (input.cyclePhase === "luteal") {
+    const adapted = adaptedDayMenus.luteal;
+    return {
+      mode: "luteal",
+      title: adapted.title,
+      reason: `Сегодня: ${weekday.day.toLowerCase()} · ПМС / лютеиновая`,
+      focus: adapted.focus,
+      tips: adapted.tips,
+      meals: adapted.meals,
+      weekday,
+    };
+  }
+
+  const phaseHint =
+    input.cyclePhase === "follicular"
+      ? "фолликулярная — обычная ротация"
+      : input.cyclePhase === "ovulation"
+        ? "овуляция — обычная ротация"
+        : "по дню недели";
+
+  return {
+    mode: "default",
+    title: `Меню: ${weekday.day}`,
+    reason: `Сегодня: ${weekday.day.toLowerCase()} · ${phaseHint}`,
+    focus: weekday.focus,
+    tips: [
+      "Граммы уже под твой масштаб порций из профиля.",
+      "Если голодно на учёбе — +10–15 г крупы, не ломая день.",
+    ],
+    meals: weekday.meals,
+    weekday,
+  };
+}
+
 export const shoppingStaples = [
   "Гречка 400–500 г, овсянка 400 г, рис 400 г, макароны 400 г",
   "Яйца 15–20 шт, куриные бёдра ≈1–1,2 кг, печень 150–200 г, фарш 300–400 г",
